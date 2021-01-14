@@ -163,6 +163,7 @@ flash:
 stm32flash:
 	stm32flash -w $(BUILD_DIR)/$(TARGET).bin -v -g 0x0 /dev/ttyUSB0
 #######################################
+ifeq (1,$(ENABLE_SEMIHOSTING))
 debug:
 	killall -q openocd ; openocd \
 	-f interface/stlink-v2.cfg \
@@ -174,8 +175,8 @@ debug:
 	--eval-command "tar ext :3333" \
 	$(BUILD_DIR)/$(TARGET).elf \
 	--eval-command "load"
-
-ocd: # debug NO_SEMIHOSTING
+else
+debug:
 	arm-none-eabi-gdb \
 	--eval-command "load" \
 	-iex ' tar ext | openocd \
@@ -186,6 +187,7 @@ ocd: # debug NO_SEMIHOSTING
 	-c "gdb_port pipe" ' \
 	-iex "monitor halt" \
 	$(BUILD_DIR)/$(TARGET).elf
+endif
 
 #######################################
 # clean up
