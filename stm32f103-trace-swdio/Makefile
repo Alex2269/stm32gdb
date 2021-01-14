@@ -174,6 +174,19 @@ debug:
 	--eval-command "tar ext :3333" \
 	$(BUILD_DIR)/$(TARGET).elf \
 	--eval-command "load"
+
+ocd: # debug NO_SEMIHOSTING
+	arm-none-eabi-gdb \
+	--eval-command "load" \
+	-iex ' tar ext | openocd \
+	-f interface/stlink-v2.cfg \
+	-f target/stm32f1x.cfg \
+	-c "adapter_khz 1800" \
+	-c "interface hla" \
+	-c "gdb_port pipe" ' \
+	-iex "monitor halt" \
+	$(BUILD_DIR)/$(TARGET).elf
+
 #######################################
 # clean up
 #######################################
