@@ -1,0 +1,25 @@
+# Prerequisites
+*.d
+
+# CubeMX
+.mxproject
+
+
+# Object files
+*.o
+*.obj
+*.elf
+
+
+# Linker output
+*.lst
+*.map
+
+
+# Executables
+*.bin
+*.hex
+
+sc_openocd.cfg
+
+*.fifo
