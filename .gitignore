@@ -20,6 +20,6 @@
 *.bin
 *.hex
 
-sc_openocd.cfg
+# sc_openocd.cfg
 
 *.fifo
