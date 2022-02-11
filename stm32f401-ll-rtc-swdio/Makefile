@@ -76,6 +76,7 @@ C_DEFS +=
 # C_DEFS += -D CALL_ARM_SYSTEM_INIT
 # C_DEFS += -D ARM_MATH_CM4
 ##
+# C_DEFS += -D USE_HAL_DRIVER
 C_DEFS += -D USE_FULL_LL_DRIVER
 ##
 C_DEFS += -DSTM32F401xC
@@ -232,7 +233,7 @@ stm32flash:
 # Generate OpenOCD config file
 OPENOCD_SCRIPT    = 'sc_openocd.cfg'
 GDB_PORT          = '3333'
-OPENOCD_INTERFACE = 'interface/stlink.cfg'
+OPENOCD_INTERFACE = 'interface/stlink-v2.cfg'
 OPENOCD_TARGET    = 'target/stm32f4x.cfg'
 ADAPTER_SPEED     = 'adapter speed 1800'
 #######################################
@@ -250,14 +251,14 @@ debug:
 else
 debug:
 	arm-none-eabi-gdb \
-	-iex 'target extended | openocd \
-	-f interface/stlink.cfg \
-	-f target/stm32f1x.cfg \
+	--eval-command "load" \
+	-iex ' tar ext | openocd \
+	-f $(OPENOCD_INTERFACE) \
+	-f $(OPENOCD_TARGET) \
 	-c "adapter_khz 1800" \
 	-c "interface hla" \
-	-c "gdb_port pipe" \
-	-iex "monitor halt" \
-	-iex "monitor tpiu config internal itm_swo.fifo uart off 72000000" \
+	-c "gdb_port pipe" ' \
+	-iex "monitor tpiu config internal itm_swo.fifo uart off 84000000" \
 	-iex "monitor itm port 0 on" \
 	$(BUILD_APP_DIR)/$(TARGET).elf
 endif
