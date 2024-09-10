@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+if [ $TERM != "screen" ]; then
+  ( (
+    tmux attach) ||
+    (
+      SESSION=$USER
+      tmux -2 new-session -d -s $SESSION
+      tmux new-session -d -s $SESSION
+      tmux splitw -p 45 -h
+      tmux select-pane -t 0; tmux send-keys "mkfifo itm_swo.fifo ; cat /dev/ttyS0 itm_swo.fifo" C-m
+      tmux select-pane -t 1; tmux send-keys "make ; make debug" C-m
+      tmux -2 attach-session -t $SESSION
+    )
+  ) && exit 0
+  echo "tmux failed to start"
+fi
+
